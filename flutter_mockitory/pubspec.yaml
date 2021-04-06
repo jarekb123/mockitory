@@ -1,6 +1,7 @@
 name: flutter_mockitory
 description: Flutter UI for mockitory package
 version: 0.0.1
+homepage: https://github.com/jarekb123/mockitory
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
