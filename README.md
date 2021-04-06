@@ -16,6 +16,8 @@ dependencies:
   flutter_mockitory: 
 ```
 
+If you want to use pure Dart Mockitory (eg. for server apps), use `mockitory` instead of `flutter_mockitory` dependency. 
+
 ## Use Mockitory mixin
 
 ```dart
@@ -64,9 +66,25 @@ MockitoryPage(
 ),
 ```
 
-### Custom delegates
+### Built-in MockValue Delegates
 
 Delegates are used to define how widgets used to manipulate fake data are built.
+
+These delegates are used by default:
+
+* `BoolMockValueDelegate`
+* `StringMockValueDelegate`
+* `IntMockValueDelegate`
+* `DoubleMockValueDelegate`
+* `DateTimeMockValueDelegate`
+
+These delegates needs to be added to `customDelegates` property in `MockitoryPage` widget:
+
+* `ChoicesMockValueDelegate<T>` - eg. `ChoicesMockValueDelegate<Gender>([Gender.male, Gender.female])`
+* `IterableMockValueDelegate<T>` - eg. `IterableMockValueDelegate<int>([0, 1], [1, 4, 5])`
+
+### Custom delegates
+
 
 You can provide your own custom delegate.
 
