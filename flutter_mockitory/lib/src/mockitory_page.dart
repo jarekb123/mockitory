@@ -125,7 +125,7 @@ class _MockValueListTileState extends State<MockValueListTile> {
               fieldKey: _formKey,
               mockValue: widget.mockValue,
               onSaved: (value) => widget.onSaved(value.copyWith(
-                  error: _errorIndex == 0 ? null : errors[_errorIndex])),
+                  error: _errorIndex == 0 ? null : errors[_errorIndex - 1])),
               delegates: widget.delegates,
             ),
           ),
