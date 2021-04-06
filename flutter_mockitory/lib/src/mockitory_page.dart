@@ -95,10 +95,9 @@ class MockValueListTile extends StatefulWidget {
 
 class _MockValueListTileState extends State<MockValueListTile> {
   GlobalKey<FormFieldState<MockValue>> _formKey;
-  int _index;
+  int _errorIndex;
 
   List<Object> errors = [
-    null,
     Exception(),
     ArgumentError(),
   ];
@@ -106,8 +105,10 @@ class _MockValueListTileState extends State<MockValueListTile> {
   @override
   void initState() {
     super.initState();
-    _index = errors.indexWhere(
-        (error) => widget.mockValue?.error?.runtimeType == error.runtimeType);
+    _errorIndex = errors.indexWhere((error) =>
+            widget.mockValue?.error?.runtimeType == error.runtimeType) +
+        1;
+
     _formKey = GlobalKey();
   }
 
@@ -123,8 +124,8 @@ class _MockValueListTileState extends State<MockValueListTile> {
             child: MockValueWidgetFactory(
               fieldKey: _formKey,
               mockValue: widget.mockValue,
-              onSaved: (value) =>
-                  widget.onSaved(value.copyWith(error: errors[_index])),
+              onSaved: (value) => widget.onSaved(value.copyWith(
+                  error: _errorIndex == 0 ? null : errors[_errorIndex])),
               delegates: widget.delegates,
             ),
           ),
@@ -132,13 +133,17 @@ class _MockValueListTileState extends State<MockValueListTile> {
       ), // custom type builder
       children: [
         _ErrorDropdown(
-          index: _index,
-          itemsCount: errors.length,
-          itemBuilder: (context, index) =>
-              Text(errors[index].runtimeType.toString()),
+          index: _errorIndex,
+          itemsCount: errors.length + 1,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return Text('No Error');
+            }
+            return Text(errors[index - 1].runtimeType.toString());
+          },
           onChanged: (index) {
             setState(() {
-              _index = index;
+              _errorIndex = index;
             });
           },
         ),
