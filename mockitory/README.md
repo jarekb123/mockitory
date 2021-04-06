@@ -4,7 +4,7 @@ The purpose of this package is to help test Flutter apps with fake data, but wit
 
 With Mockitory you can mock data layer using the app itself by adding `flutter_mockitory` widgets.
 
-![](example_ui.png)
+![](../example_ui.png)
 
 # How to use it?
 
