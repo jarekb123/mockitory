@@ -77,10 +77,10 @@ packages:
   mockitory:
     dependency: "direct main"
     description:
-      path: "../mockitory"
-      relative: true
-    source: path
-    version: "0.0.1+1"
+      name: mockitory
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   path:
     dependency: transitive
     description:
