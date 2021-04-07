@@ -1,3 +1,6 @@
+## 2.0.1+1
+
+* Add example of Mockitory (example/main.dart) 
 
 ## 2.0.1
 
