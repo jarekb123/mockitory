@@ -24,10 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  mockitory:
-    path: ../mockitory
   flutter_mockitory:
-    path: ../flutter_mockitory
+    path: ../
 
 
   # The following adds the Cupertino Icons font to your application.
