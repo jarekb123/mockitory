@@ -13,7 +13,7 @@ class _TestMockitory with Mockitory {
 }
 
 void main() {
-  _TestMockitory testMockitory;
+  late _TestMockitory testMockitory;
 
   setUp(() {
     testMockitory = _TestMockitory();
