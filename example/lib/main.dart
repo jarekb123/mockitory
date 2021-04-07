@@ -12,7 +12,9 @@ class CustomBoolMockValueDelegate extends MockValueDelegate<bool> {
     return Checkbox(
       activeColor: Colors.red,
       value: value,
-      onChanged: (value) => onChanged(MockValue(value)),
+      onChanged: (value) {
+        if (value != null) onChanged(MockValue(value));
+      },
     );
   }
 }
@@ -35,7 +37,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     mockitory1.observeGender().listen((gender) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
         SnackBar(content: Text('Gender updated: $gender')),
       );
     });
