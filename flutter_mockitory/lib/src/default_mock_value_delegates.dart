@@ -5,7 +5,7 @@ import 'package:mockitory/mockitory.dart';
 
 import '../flutter_mockitory.dart';
 
-final defaultMockValueDelegates = [
+final List<MockValueDelegate> defaultMockValueDelegates = [
   BoolMockValueDelegate(),
   StringMockValueDelegate(),
   IntMockValueDelegate(),
@@ -20,7 +20,11 @@ class BoolMockValueDelegate extends MockValueDelegate<bool> {
   Widget buildMockValueWidget(BuildContext context, bool value, onChanged) {
     return Checkbox(
       value: value,
-      onChanged: (value) => onChanged(MockValue(value)),
+      onChanged: (value) {
+        if (value != null) {
+          onChanged(MockValue(value));
+        }
+      },
     );
   }
 }
@@ -88,7 +92,9 @@ class ChoicesMockValueDelegate<T> extends MockValueDelegate<T> {
           )
           .toList(),
       value: currentValue,
-      onChanged: (value) => onChanged(MockValue(value)),
+      onChanged: (value) {
+        if (value != null) onChanged(MockValue(value));
+      },
     );
   }
 }
@@ -109,7 +115,11 @@ class IterableMockValueDelegate<T, I extends Iterable<T>>
           DropdownMenuItem(child: Text(values[i].toString()), value: i),
       ],
       value: currentIndex,
-      onChanged: (index) => onChanged(MockValue(values[index])),
+      onChanged: (index) {
+        if (index != null) {
+          onChanged(MockValue(values[index]));
+        }
+      },
     );
   }
 }

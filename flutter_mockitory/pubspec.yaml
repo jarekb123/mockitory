@@ -1,15 +1,16 @@
 name: flutter_mockitory
-description: Flutter UI for mockitory package
-version: 0.0.1+1
+description: Mock data layer with Flutter widgets
+version: 2.0.1
 homepage: https://github.com/jarekb123/mockitory
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  mockitory: ^0.0.1
+  mockitory: 
+    path: ../mockitory
 
 dev_dependencies:
   flutter_test:

@@ -6,8 +6,8 @@ import 'mock_value_delegate.dart';
 
 class MockitoryPage extends StatefulWidget {
   const MockitoryPage({
-    Key key,
-    @required this.mockitory,
+    Key? key,
+    required this.mockitory,
     this.customDelegates = const [],
   }) : super(key: key);
 
@@ -21,7 +21,7 @@ class MockitoryPage extends StatefulWidget {
 class _MockitoryPageState extends State<MockitoryPage> {
   List<String> get _names => widget.mockitory.mockValues.keys.toList();
 
-  GlobalKey<FormState> _formKey;
+  late GlobalKey<FormState> _formKey;
 
   @override
   void initState() {
@@ -35,8 +35,8 @@ class _MockitoryPageState extends State<MockitoryPage> {
       appBar: AppBar(
         title: Text('${widget.mockitory.runtimeType}'),
         actions: [
-          FlatButton(
-            onPressed: () => _formKey.currentState.save(),
+          TextButton(
+            onPressed: () => _formKey.currentState?.save(),
             child: Text(
               'Save all',
               style: TextStyle(
@@ -56,9 +56,16 @@ class _MockitoryPageState extends State<MockitoryPage> {
               stream: widget.mockitory.observeMockValueUpdates(_names[index]),
               initialData: widget.mockitory.mockValues[_names[index]],
               builder: (context, snapshot) {
+                final mockValue = snapshot.data;
+
+                if (mockValue == null) {
+                  throw StateError(
+                      'Cannot observe MockValue registered under "${_names[index]}" name');
+                }
+
                 return MockValueListTile(
                   name: _names[index],
-                  mockValue: snapshot.data,
+                  mockValue: mockValue,
                   onSaved: (mockValue) =>
                       widget.mockitory.updateValue(_names[index], mockValue),
                   delegates: [
@@ -77,10 +84,10 @@ class _MockitoryPageState extends State<MockitoryPage> {
 
 class MockValueListTile extends StatefulWidget {
   const MockValueListTile({
-    Key key,
-    @required this.name,
-    @required this.mockValue,
-    @required this.onSaved,
+    Key? key,
+    required this.name,
+    required this.mockValue,
+    required this.onSaved,
     this.delegates = const [],
   }) : super(key: key);
 
@@ -94,8 +101,8 @@ class MockValueListTile extends StatefulWidget {
 }
 
 class _MockValueListTileState extends State<MockValueListTile> {
-  GlobalKey<FormFieldState<MockValue>> _formKey;
-  int _errorIndex;
+  late GlobalKey<FormFieldState<MockValue>> _formKey;
+  late int _errorIndex;
 
   List<Object> errors = [
     Exception(),
@@ -106,7 +113,7 @@ class _MockValueListTileState extends State<MockValueListTile> {
   void initState() {
     super.initState();
     _errorIndex = errors.indexWhere((error) =>
-            widget.mockValue?.error?.runtimeType == error.runtimeType) +
+            widget.mockValue.error.runtimeType == error.runtimeType) +
         1;
 
     _formKey = GlobalKey();
@@ -154,11 +161,11 @@ class _MockValueListTileState extends State<MockValueListTile> {
 
 class _ErrorDropdown extends StatelessWidget {
   const _ErrorDropdown({
-    Key key,
-    @required this.index,
-    @required this.onChanged,
+    Key? key,
+    required this.index,
+    required this.onChanged,
+    required this.itemBuilder,
     this.itemsCount = 0,
-    this.itemBuilder,
   }) : super(key: key);
 
   final int index;
@@ -182,7 +189,9 @@ class _ErrorDropdown extends StatelessWidget {
                   value: i,
                 )
             ],
-            onChanged: (index) => onChanged(index),
+            onChanged: (index) {
+              if (index != null) onChanged(index);
+            },
           )
         ],
       ),
@@ -192,11 +201,11 @@ class _ErrorDropdown extends StatelessWidget {
 
 class MockValueWidgetFactory extends StatefulWidget {
   const MockValueWidgetFactory({
-    Key key,
-    @required this.mockValue,
-    this.onSaved,
-    this.fieldKey,
-    @required this.delegates,
+    Key? key,
+    required this.mockValue,
+    required this.onSaved,
+    required this.fieldKey,
+    required this.delegates,
   }) : super(key: key);
 
   final GlobalKey<FormFieldState<MockValue>> fieldKey;
@@ -215,22 +224,23 @@ class _MockValueWidgetFactoryState extends State<MockValueWidgetFactory> {
       key: widget.fieldKey,
       initialValue: widget.mockValue,
       onSaved: (newValue) {
-        widget.onSaved(widget.fieldKey.currentState.value);
+        if (newValue != null) widget.onSaved(newValue);
       },
       builder: (state) {
-        final delegate = widget.delegates.firstWhere(
+        final delegateIndex = widget.delegates.indexWhere(
           (delegate) {
             return delegate.handlesValue(widget.mockValue.value);
           },
-          orElse: () => null,
         );
+        final delegate =
+            delegateIndex != -1 ? widget.delegates[delegateIndex] : null;
 
         if (delegate != null) {
           return delegate.buildMockValueWidget(
             context,
-            widget.fieldKey.currentState.value.value,
+            widget.fieldKey.currentState?.value?.value,
             (mockValue) {
-              widget.fieldKey.currentState.didChange(mockValue);
+              widget.fieldKey.currentState?.didChange(mockValue);
             },
           );
         } else {
